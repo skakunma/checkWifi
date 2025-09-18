@@ -71,11 +71,13 @@ func (s *StartHandler) Init() error {
 			return err
 		}
 		for _, pwd := range passwords {
-			hash := password.Hash(pwd)
-			if network, ok := networkHashMap[hash]; ok {
-				fmt.Println(fmt.Sprintf("NETWORK PASSWORD IS FOUND!!! : %s:%s", network.Name, pwd))
+			for _, network := range networksNotFormat {
+				hash := password.Hash(pwd, network.Name)
+				if network, ok := networkHashMap[string(hash)]; ok {
+					fmt.Println(fmt.Sprintf("NETWORK PASSWORD IS FOUND!!! : %s:%s", network.Name, pwd))
+					delete(networkHashMap, string(hash))
+				}
 			}
-			delete(networkHashMap, hash)
 		}
 
 	}

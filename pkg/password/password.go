@@ -2,7 +2,9 @@ package password
 
 import (
 	"crypto/rand"
+	"crypto/sha1"
 	"errors"
+	"golang.org/x/crypto/pbkdf2"
 	"math/big"
 )
 
@@ -87,7 +89,6 @@ func GenerateRandomPasswordsAdvanced(length int, useLower, useUpper, useDigits, 
 		charSet += specialChars
 	}
 
-	// Validate that at least one character set is selected
 	if charSet == "" {
 		return nil, errors.New("at least one character set must be selected")
 	}
@@ -106,6 +107,7 @@ func GenerateRandomPasswordsAdvanced(length int, useLower, useUpper, useDigits, 
 	return passwords, nil
 }
 
-func Hash(password Password) string {
-
+func Hash(password Password, ssid string) []byte {
+	hash := pbkdf2.Key([]byte(password), []byte(ssid), 4096, 32, sha1.New)
+	return hash
 }
