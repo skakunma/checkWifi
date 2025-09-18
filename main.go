@@ -1,0 +1,5 @@
+package checkWifi
+
+func Main() {
+
+}
