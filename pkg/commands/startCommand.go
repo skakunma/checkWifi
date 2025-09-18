@@ -85,20 +85,17 @@ func (s *StartHandler) Init() error {
 }
 
 func extractHashFromCap(capPath string) (string, error) {
-	// Конвертация .cap в .hccapx (формат для hashcat)
 	cmd := exec.Command("hcxpcaptool", "-o", "output.hccapx", "-z", "temp.hash", capPath)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return "", fmt.Errorf("Ошибка конвертации: %v, %s", err, string(out))
 	}
 
-	// Читаем хэш из файла
 	hashBytes, err := os.ReadFile("temp.hash")
 	if err != nil {
 		return "", fmt.Errorf("Ошибка чтения хэша: %v", err)
 	}
 
-	// Можно сразу удалить временный файл
 	os.Remove("temp.hash")
 	os.Remove("output.hccapx")
 
